@@ -1,0 +1,49 @@
+@baseGray: #ddd;
+@projectsPadding: 10px;
+
+.cursorPointer() {cursor: pointer; cursor: hand;}
+
+
+.quick-edit-list {
+  &-list {
+      .actions {position: absolute; right:  @projectsPadding ; top:  @projectsPadding; display: none;}
+      a, .readonly {display: block; padding: @projectsPadding 0 @projectsPadding @projectsPadding;}
+      li {position: relative;}
+      li:hover {
+          background-color: @baseGray;
+          .actions {display: block;}
+     }
+   }
+   &-form {
+    padding: @projectsPadding 0;
+   }
+}
+
+.custom-control {line-height: 40px;
+  a:hover {text-decoration: none; font-weight: bold;}
+}
+
+a {.cursorPointer;}
+
+#projects, #directories {
+  .quick-edit-list;
+}
+
+#editor-mode-nav {
+  margin-bottom: 8px;
+  li {float: left; width: 50%;}
+}
+
+#editor-nav-list {
+  & > li:first-child {margin-left: 80px;}
+}
+
+.navbar-placeholder {height: 80px;}
+#files {width: 200px;} 
+
+#editor-content {
+  .glyphicon {margin-right: 5px;}
+}
+
+
+

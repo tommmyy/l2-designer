@@ -1,0 +1,24 @@
+<div class="modal-header">
+	<h3>Create directory</h3>
+</div>
+<div class="modal-body">
+
+	<form id="directories-form" ng-submit="addDirectory()">
+		<input id="new-directory" class="form-control" placeholder="Name of new directory" ng-model="selected.newDirectory" autofocus />
+	</form>
+
+	<p ng-if="directories.length === 0"class="text-center">
+		<em>No directories yet.</em>
+	</p>
+
+	<ul  id="directories-list">
+		<li ng-repeat="directory in project.directories">
+			<span class="readonly">{{ directory.name }}</span>
+		</li>
+	</ul>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" ng-click="done()">
+		Done
+	</button>
+</div>

@@ -1,0 +1,103 @@
+<div class="row" id="editor-nav">
+	<nav  class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<ul class="nav navbar-nav" id="editor-nav-list">
+			<li>
+				<a href="/projects" tooltip-placement="bottom" tooltip="Back to projects"><span class="glyphicon glyphicon-arrow-left"></span></a>
+			</li>
+			<li>
+				<a popover-template="tree.html" popover-placement="bottom"><span class="glyphicon glyphicon-list"></span></a>
+			</li>
+			<li>
+				<a href="">{{project.name}}</a>
+			</li>
+		</ul>
+	</nav>
+	<div class="navbar-placeholder"></div>
+
+	<script type="text/ng-template" id="tree.html">
+		<div id="files" ng-controller="FilesController">
+			<div ng-if="treeFiles.length > 0" context-menu="files-context-menu" context-menu-controller="menuController">
+				<abn-tree tree-data="treeFiles" on-select="treeFilesHandler(branch)"></abn-tree>
+			</div>
+			<div ng-if="treeFiles.length === 0">
+				<em>No scripts yet.</em>
+			</div>
+	
+			<div id="files-context-menu">
+				<ul class="dropdown-menu" role="menu">
+					<li ng-if="selected.type === 'script'">
+						<a tabindex="-1" ng-click="openScript(selected.id)">Open</a>
+					</li>
+					<li ng-if="selected.type === 'script'">
+						<a tabindex="-1"  ng-click="deleteScript(selected.id)">Delete</a>
+					</li>
+					<li ng-if="selected.type === 'dir'">
+						<a tabindex="-1"  ng-click="deleteDir(selected.id)">Delete</a>
+					</li>
+					<li ng-if="selected.type === 'script'" class="divider"></li>
+					<li ng-if="selected.type === 'script'">
+						<a tabindex="-1"  ng-click="mutateScript(selected.id)">Mutate</a>
+					</li>
+					<li  ng-if="selected" class="divider"></li>
+					<li role="presentation"  class="dropdown-header">
+						Create
+					</li>
+					<li>
+						<a tabindex="-1" ng-click="createScript()">Script</a>
+					</li>
+					<li>
+						<a tabindex="-1" ng-click="createDir()">Directory</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</script>
+
+</div>
+<div class="row">
+	<div class="col-md-offset-2 col-md-8" id="editor-content" ng-if="formdata.script">
+		<nav id="editor-mode-nav" class="clearfix">
+			<ul>
+				<li>
+					<a ng-class="{active: mode === 'code'}" class="btn btn-link btn-lg btn-block"  ng-click="mode='code'"><span class="glyphicon glyphicon-align-left"></span>Code</a>
+				</li>
+				<li>
+					<a ng-class="{active: mode === 'interpretation'}" class="btn btn-link btn-lg btn-block" ng-click="mode='interpretation'"><span class="glyphicon glyphicon-eye-open"></span>Interpretation</a>
+				</li>
+			</ul>
+		</nav>
+
+		<div ng-if="mode === 'code'">
+			<form ng-submit="saveScript()" name="scriptForm">
+				<div class="row">
+					<div class="form-group col-md-6" ng-class="{'has-error': scriptForm.name.$invalid && scriptForm.name.$dirty}">
+						<input name="name" ng-model="formdata.script.name" class="form-control" placeholder="Script name" required />
+						<div ng-if="scriptForm.name.$invalid && scriptForm.name.$dirty">
+							<span ng-show="scriptForm.name.$error.required" class="help-block">Fill script name.</span>
+						</div>
+					</div>
+					<div class="form-group col-md-6 custom-control" ng-class="{'has-error': errors.dir}">
+						<a ng-click="selectDir()"><span class="glyphicon glyphicon-folder-open"></span>&nbsp;{{formdata.dir.name || 'Select directory'}}</a>
+						<span ng-if="errors.dir"> <span ng-show="errors.dir.missing" class="help-block">Missing directory.</span> </spam>
+					</div>
+				</div>
+				<div class="form-group">
+					<textarea ng-model="formdata.script.code" class="form-control" rows="10"></textarea>
+				</div>
+
+				<div class="form-group pull-right clearfix">
+					<button type="submit" class="btn btn-primary">
+						Save
+					</button>
+				</div>
+			</form>
+
+		</div>
+
+		<div ng-if="mode === 'interpretation'">
+			<div id="interpretation-canvas"></div>
+		</div>
+	</div>
+
+</div>
+
