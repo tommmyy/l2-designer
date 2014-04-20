@@ -75,9 +75,16 @@ module.exports = function(grunt) {
 								'angular-bootstrap' : null
 							}
 						},
+						'kineticjs' : {
+							path : 'client/requires/kineticjs/js/kinetic.js',
+							exports : 'Kinetic'
+						},
 						'l2js' : {
 							path : 'client/requires/l2js/js/l2js.js',
-							exports : null
+							exports : 'l2js',
+							depends : {
+								'kineticjs' : 'Kinetic'
+							}
 						}
 					}
 				}
@@ -88,7 +95,7 @@ module.exports = function(grunt) {
 				},
 				options : {
 					transform : ['hbsfy'],
-					external : ['jquery', 'angular', 'angular-route', 'angular-resource', 'angular-bootstrap', 'angular-bootstrap-tpls', 'bootstrap-contextmenu','l2js']
+					external : ['jquery', 'angular', 'angular-route', 'angular-resource', 'angular-bootstrap', 'angular-bootstrap-tpls', 'bootstrap-contextmenu','l2js', 'kineticjs']
 				}
 			},
 			test : {
@@ -97,7 +104,7 @@ module.exports = function(grunt) {
 				},
 				options : {
 					transform : ['hbsfy'],
-					external : ['jquery', 'angular', 'angular-route', 'angular-resource', 'angular-bootstrap', 'angular-bootstrap-tpls', 'bootstrap-contextmenu','l2js']
+					external : ['jquery', 'angular', 'angular-route', 'angular-resource', 'angular-bootstrap', 'angular-bootstrap-tpls', 'bootstrap-contextmenu','l2js', 'kineticjs']
 				}
 			}
 		},

@@ -1,18 +1,28 @@
-var DirController = require('./dirController').DirController;
+var DirController = require('./dirController').DirController, NameScriptController = require('./nameScriptController').NameScriptController;
 exports.EditorController = function($scope, $routeParams, $location, $modal, Projects, Scripts, UserBubble) {
-	var DEFAULT_MODE = 'code', origDir;
+	var DEFAULT_MODE = 'code';
 	$scope.formdata = {};
 	$scope.mode = $routeParams.mode || DEFAULT_MODE;
-
+	$scope.master = {};
 	$scope.$on('project_updated', function(e, project) {
 		$scope.project = project;
 	});
 
+	$scope.changeMode = function(mode) {
+		$scope.mode = mode;
+	};
+
 	$scope.createScript = function() {
-		redirectToProject();
+		$scope.redirectToProject();
 	};
 	$scope.openScript = function(id) {
-		redirectToScript(id);
+		$scope.redirectToScript(id);
+	}; 
+	
+	$scope.getCurrentDir = function() {
+		return findDir($scope.project, {
+			_id : $scope.formdata.dir
+		});
 	};
 
 	$scope.deleteScript = function(id) {
@@ -33,7 +43,7 @@ exports.EditorController = function($scope, $routeParams, $location, $modal, Pro
 				updateProject(project, function() {
 					$scope.$emit('user_bubble', new UserBubble("Script deleted."));
 					if (Number($routeParams.scriptId) === id) {
-						redirectToProject();
+						$scope.redirectToProject();
 					}
 				});
 
@@ -44,7 +54,7 @@ exports.EditorController = function($scope, $routeParams, $location, $modal, Pro
 
 	$scope.deleteDir = function(id) {
 		console.log("delete dir: " + id);
-		var scripts = findDir({
+		var scripts = findDir($scope.project, {
 			_id : id
 		})._scripts;
 		Projects.deleteDirectory({
@@ -59,7 +69,7 @@ exports.EditorController = function($scope, $routeParams, $location, $modal, Pro
 				});
 
 				if ($.inArray($routeParams.scriptsId, scriptsId)) {
-					redirectToProject();
+					$scope.redirectToProject();
 				}
 
 			}
@@ -90,13 +100,6 @@ exports.EditorController = function($scope, $routeParams, $location, $modal, Pro
 	$scope.saveScript = function() {
 		$scope.errors = {};
 
-		if (!$scope.formdata.dir) {
-			$scope.errors.dir = $scope.errors.dir || {};
-			$scope.errors.dir.missing = true;
-
-			return;
-		}
-
 		if ($scope.formdata.script._id) {
 			Scripts.update({
 				scriptId : $scope.formdata.script._id
@@ -105,13 +108,17 @@ exports.EditorController = function($scope, $routeParams, $location, $modal, Pro
 					errorHandler(script.error);
 				} else {
 					var project = angular.copy($scope.project);
-					if (origDir && origDir._id !== $scope.formdata.dir._id) {
-						deleteScriptFromDir(findDir(project, origDir), script);
-						findDir(project, $scope.formdata.dir)._scripts.push(script);
+					if ($scope.master.dir && $scope.master.dir !== $scope.formdata.dir) {
+						deleteScriptFromDir(findDir(project, {
+							_id : $scope.master.dir
+						}), script);
+						findDir(project, {
+							_id : $scope.formdata.dir
+						})._scripts.push(script);
 					}
 
 					updateProject(project, function() {
-						origDir = $scope.formdata.dir;
+						syncMaster();
 						$scope.$emit('user_bubble', new UserBubble("Script updated."));
 					});
 				}
@@ -122,39 +129,25 @@ exports.EditorController = function($scope, $routeParams, $location, $modal, Pro
 				if (script.error) {
 					errorHandler(script.error);
 				} else {
-					var dir = angular.copy($scope.formdata.dir);
+					var dir = angular.copy(findDir($scope.project, {
+						_id : $scope.formdata.dir
+					}));
 					dir._scripts.push(script);
 					Projects.updateDirectory({
 						projectId : $scope.project._id,
-						dirId : $scope.formdata.dir._id
+						dirId : $scope.formdata.dir
 					}, dir).$promise.then(function() {
 						$scope.$emit('user_bubble', new UserBubble("Script saved."));
-						redirectToScript(script._id);
+						syncMaster();
+						$scope.redirectToScript(script._id);
 					}, errorHandler);
 				}
 			}, errorHandler);
 		}
 	};
-
-	$scope.selectDir = function() {
-		var modalInstance = $modal.open({
-			templateUrl : '/templates/selectDirModal.html',
-			controller : DirController,
-			resolve : {
-				Projects : function() {
-					return Projects;
-				},
-				parentScope : function() {
-					return $scope;
-				}
-			}
-		});
-
-		modalInstance.result.then(function(selectedItem) {
-			$scope.formdata.dir = selectedItem;
-		}, function() {
-			//dissmiss
-		});
+	
+	$scope.run = function(script) {
+		$scope.$broadcast("run_script", script);
 	};
 
 	var newProject = Projects.get({
@@ -176,22 +169,52 @@ exports.EditorController = function($scope, $routeParams, $location, $modal, Pro
 				}
 
 				var dir = findDirByScript($scope.project, script);
-				$scope.formdata.script = script;
-				$scope.formdata.dir = dir;
-				origDir = dir;
+
+				$scope.master.script = script;
+				$scope.master.dir = dir._id;
+
+				$scope.formdata.script = angular.copy(script);
+				$scope.formdata.dir = dir._id;
 			}, function(err) {
-				redirectToProject();
+				$scope.redirectToProject();
 			});
 
 		} else {
-			$scope.formdata.script = {
-				name : '',
-				code : ''
+			var init = {
+				script : {
+					name : 'Untitled',
+					code : ''
+				}
+
 			};
+			$scope.master = init;
+			$scope.formdata = init;
 		}
 	}, function(err) {
 		$location.path('/projects');
 	});
+
+	$scope.nameScript = function() {
+		var modalInstance = $modal.open({
+			templateUrl : '/templates/nameScriptModal.html',
+			controller : NameScriptController,
+			resolve : {
+				name : function() {
+					return $scope.formdata.script.name;
+				}
+			}
+		});
+
+		modalInstance.result.then(function(name) {
+			$scope.formdata.script.name = name;
+		}, function() {
+			//dissmiss
+		});
+	};
+
+	$scope.isFormUnchanged = function(form) {
+		return angular.equals(form, $scope.master);
+	};
 
 	function updateProject(project, success) {
 		Projects.update({
@@ -207,12 +230,24 @@ exports.EditorController = function($scope, $routeParams, $location, $modal, Pro
 		}, errorHandler);
 	}
 
-	function redirectToProject() {
+
+	$scope.redirectToProject = function() {
 		$location.path("/projects/" + $scope.project._id);
+	};
+
+	$scope.redirectToScript = function(id) {
+		if (checkForUnsavedScript()) {
+			$location.path('/projects/' + $scope.project._id + "/scripts/" + id + "/code");
+		}
+	};
+
+	function syncMaster() {
+		$scope.master.dir = $scope.formdata.dir;
+		$scope.master.script = $scope.formdata.script;
 	}
 
-	function redirectToScript(id) {
-		$location.path('/projects/' + $scope.project._id + "/scripts/" + id + "/code");
+	function checkForUnsavedScript() {
+		return $scope.isFormUnchanged($scope.formdata) || confirm("Continue without saving?");
 	}
 
 	function errorHandler(err) {

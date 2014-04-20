@@ -65,7 +65,7 @@ exports.FilesController = function($scope, $location, $routeParams) {
 	}
 
 	function scriptClick(branch) {
-		$location.path('/projects/' + $scope.project._id + '/scripts/' + branch.data.id + '/code');
+		$scope.redirectToScript(branch.data.id );
 	}
 
 };

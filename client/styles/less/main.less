@@ -2,7 +2,9 @@
 @projectsPadding: 10px;
 
 .cursorPointer() {cursor: pointer; cursor: hand;}
-
+.iconText() {
+  .glyphicon {margin-right: 5px;}
+}
 
 .quick-edit-list {
   &-list {
@@ -29,20 +31,26 @@ a {.cursorPointer;}
   .quick-edit-list;
 }
 
-#editor-mode-nav {
-  margin-bottom: 8px;
-  li {float: left; width: 50%;}
-}
-
 #editor-nav-list {
   & > li:first-child {margin-left: 80px;}
 }
 
-.navbar-placeholder {height: 80px;}
+.navbar-placeholder {height: 55px;}
 #files {width: 200px;} 
 
-#editor-content {
-  .glyphicon {margin-right: 5px;}
+
+
+#title-wrapper {
+  h2, a{display: inline; margin: 0; padding: 0;margin-right: 5px;}
+  h2 {
+    a {color: black;}
+  }
+  .iconText();
+  margin-bottom: 10px;
+}
+
+#editor-perspective {
+  .iconText();
 }
 
 
