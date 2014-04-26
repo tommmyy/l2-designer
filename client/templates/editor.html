@@ -55,7 +55,7 @@
 
 </div>
 
-<form  class="row" ng-submit="saveScript()" name="scriptForm" ng-if="formdata.script">
+<form  class="row" ng-submit="saveScript()" name="scriptForm" ng-if="formdata.script" >
 	<div class="col-md-offset-2 col-md-8">
 		<div id="title-wrapper" class="clearfix">
 			<h2><a ng-click="nameScript()">{{formdata.script.name}}</a></h2>
@@ -68,10 +68,10 @@
 			<div class="col-md-4 form-group">
 				<div class="btn-toolbar"role="toolbar">
 					<div class="btn-group">
-						<button type="submit" class="btn btn-primary" ng-disabled=" isFormUnchanged(formdata)">
+						<button type="submit" class="btn btn-primary" ng-disabled="isFormUnchanged(formdata)">
 							Save
 						</button>
-						<button type="button" class="btn btn-primary">
+						<button type="button" ng-click="format(formdata.script)" class="btn btn-primary">
 							Format
 						</button>
 					</div>
@@ -103,8 +103,50 @@
 			</div>
 		</div>
 
-		<div class="row" ng-show="mode === 'interpretation'" ng-controller="InterpretationController">
-			<div id="interpretation-canvas"></div>
+		<div  ng-show="mode === 'interpretation'" ng-controller="InterpretationController">
+			<div class="row">
+				<div class="alert alert-info" ng-show="interpretation.compiling">
+					Compiling...
+				</div>
+				<div class="alert alert-info" ng-show="interpretation.derivating">
+					Derivating...
+				</div>
+				<div id="interpretation-canvas" ng-style="{width: interpretationSettings.width}"></div>
+			</div>
+			<form role="form">
+				<div class="row">
+					<div class="form-group col-md-3">
+						<label for="canvas-width">Width</label>
+						<input type="number" ng-model="interpretationSettings.width" class="form-control" id="canvas-width" placeholder="Canvas width">
+					</div>
+					<div class="form-group col-md-3">
+						<label for="canvas-height">Height</label>
+						<input type="number" ng-model="interpretationSettings.height" class="form-control" id="canvas-width" placeholder="Canvas height">
+					</div>
+					<div class="form-group col-md-3">
+						<label for="background">Background color</label>
+						<input type="text" ng-model="interpretationSettings.background" class="form-control" id="background" placeholder="Hex-value" />
+					</div>
+					<div class="form-group col-md-3">
+						<label for="symbols-per-frame">Symbols per animation frame</label>
+						<input type="number" ng-model="interpretationSettings.symbolsPerFrame" class="form-control" id="symbols-per-frame" placeholder="Number of symbols" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="form-group col-md-4">
+						<label for="turtle-x">Turtle position - x</label>
+						<input type="number" ng-model="interpretationSettings.x" class="form-control" id="turtle-x" placeholder="x-Coordination" />
+					</div>
+					<div class="form-group col-md-4">
+						<label for="turtle-y">Turtle position - y</label>
+						<input type="number" ng-model="interpretationSettings.y" class="form-control" id="turtle-y" placeholder="y-Coordination" />
+					</div>
+					<div class="form-group col-md-4">
+						<label for="turtle-orientation">Turtle orientation</label>
+						<input type="number" ng-model="interpretationSettings.orientation" class="form-control" id="turtle-orientation" placeholder="Angle" />
+					</div>
+				</div>
+			</form>
 		</div>
 
 	</div>

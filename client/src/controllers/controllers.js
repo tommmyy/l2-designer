@@ -10,6 +10,6 @@ var angular = require("angular"),
 app.controller('AppController', ['$scope', AppController]);
 app.controller('ProjectsController', ['$scope', '$routeParams', 'UserBubble', 'Projects', ProjectsController]);	
 app.controller('FilesController', ['$scope', '$location', '$routeParams', FilesController]);
-app.controller('InterpretationController', ['$scope', InterpretationController]);
+app.controller('InterpretationController', ['$scope', 'UserBubble', 'Env', InterpretationController]);
 
 app.controller('EditorController', ['$scope', '$routeParams', '$location', '$modal', 'Projects', 'Scripts', 'UserBubble', EditorController]);

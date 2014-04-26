@@ -91,3 +91,13 @@ function($resource) {
 		}
 	});
 }]);
+
+l2jsDesignerServices.factory('Env', ['$resource',
+function($resource) {
+	return $resource('/env/derive', {
+	}, {
+		'derive' : {
+			method : 'POST'
+		}
+	});
+}]);

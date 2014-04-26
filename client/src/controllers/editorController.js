@@ -150,6 +150,18 @@ exports.EditorController = function($scope, $routeParams, $location, $modal, Pro
 		$scope.$broadcast("run_script", script);
 	};
 
+	$scope.format = function(script) {
+		$scope.$broadcast("format_script", script);
+		$scope.changeMode("code");
+		
+		l2js.format(script.code).then(function(formatted){
+			$scope.$apply(function(){
+				$scope.formdata.script.code = formatted;
+			});
+		});
+	};
+
+
 	var newProject = Projects.get({
 		projectId : $routeParams.projectId
 	}).$promise.then(function(res) {
@@ -169,12 +181,9 @@ exports.EditorController = function($scope, $routeParams, $location, $modal, Pro
 				}
 
 				var dir = findDirByScript($scope.project, script);
-
-				$scope.master.script = script;
-				$scope.master.dir = dir._id;
-
-				$scope.formdata.script = angular.copy(script);
+				$scope.formdata.script = script;
 				$scope.formdata.dir = dir._id;
+				syncMaster();
 			}, function(err) {
 				$scope.redirectToProject();
 			});
@@ -187,8 +196,8 @@ exports.EditorController = function($scope, $routeParams, $location, $modal, Pro
 				}
 
 			};
-			$scope.master = init;
 			$scope.formdata = init;
+			syncMaster();
 		}
 	}, function(err) {
 		$location.path('/projects');
@@ -213,6 +222,7 @@ exports.EditorController = function($scope, $routeParams, $location, $modal, Pro
 	};
 
 	$scope.isFormUnchanged = function(form) {
+
 		return angular.equals(form, $scope.master);
 	};
 
@@ -242,8 +252,7 @@ exports.EditorController = function($scope, $routeParams, $location, $modal, Pro
 	};
 
 	function syncMaster() {
-		$scope.master.dir = $scope.formdata.dir;
-		$scope.master.script = $scope.formdata.script;
+		$scope.master = angular.copy($scope.formdata);
 	}
 
 	function checkForUnsavedScript() {

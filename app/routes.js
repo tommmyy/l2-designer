@@ -1,6 +1,7 @@
 var home = require('../controllers/home'),
     projects = require('../controllers/projects'), 
-    scripts = require('../controllers/scripts');
+    scripts = require('../controllers/scripts'),
+    env = require('../controllers/env');
 
 module.exports.initialize = function(app) {
     app.get('/', home.index);
@@ -8,6 +9,8 @@ module.exports.initialize = function(app) {
     app.get('/projects/:id', home.index);
     app.get('/projects/:id/scripts/:scriptId', home.index);
     app.get('/projects/:id/scripts/:scriptId/:mode', home.index);
+    
+    app.post('/env/derive', env.derive);
     
     app.get('/api/projects', projects.index);
     app.get('/api/projects/:id', projects.getById);
