@@ -1,4 +1,4 @@
-var DirController = require('./dirController').DirController, NameScriptController = require('./nameScriptController').NameScriptController;
+var DirController = require('./dirController').DirController, EvolutionController = require('./evolutionController').EvolutionController, NameScriptController = require('./nameScriptController').NameScriptController;
 exports.EditorController = function($scope, $routeParams, $location, $modal, Projects, Scripts, UserBubble) {
 	var DEFAULT_MODE = 'code';
 	$scope.formdata = {};
@@ -17,12 +17,38 @@ exports.EditorController = function($scope, $routeParams, $location, $modal, Pro
 	};
 	$scope.openScript = function(id) {
 		$scope.redirectToScript(id);
-	}; 
-	
+	};
+
 	$scope.getCurrentDir = function() {
 		return findDir($scope.project, {
 			_id : $scope.formdata.dir
 		});
+	};
+
+	$scope.evolveScript = function(id) {
+
+		Scripts.get({
+			scriptId : id
+		}).$promise.then(function(res) {
+			var script = res;
+			var modalInstance = $modal.open({
+				templateUrl : '/templates/evolutionModal.html',
+				controller : EvolutionController,
+				windowClass: 'evolution-modal',
+				resolve : {
+					script : function() {
+						return script;
+					},
+					Projects : function() {
+						return Projects;
+					},
+					parentScope : function() {
+						return $scope;
+					}
+				}
+			});
+		});
+
 	};
 
 	$scope.deleteScript = function(id) {
@@ -145,7 +171,7 @@ exports.EditorController = function($scope, $routeParams, $location, $modal, Pro
 			}, errorHandler);
 		}
 	};
-	
+
 	$scope.run = function(script) {
 		$scope.$broadcast("run_script", script);
 	};
@@ -153,14 +179,13 @@ exports.EditorController = function($scope, $routeParams, $location, $modal, Pro
 	$scope.format = function(script) {
 		$scope.$broadcast("format_script", script);
 		$scope.changeMode("code");
-		
-		l2js.format(script.code).then(function(formatted){
-			$scope.$apply(function(){
+
+		l2js.format(script.code).then(function(formatted) {
+			$scope.$apply(function() {
 				$scope.formdata.script.code = formatted;
 			});
 		});
 	};
-
 
 	var newProject = Projects.get({
 		projectId : $routeParams.projectId

@@ -1,0 +1,191 @@
+<div class="modal-header">
+	<h1>Evolution</h1>
+</div>
+<div class="modal-body">
+
+	<div class="clearfix">
+
+		<nav id="evolution-nav">
+			<form ng-submit="nextGeneration()" role="form">
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary">
+						Next generation
+					</button>
+				</div>
+				<div class="form-group">
+					<label for="opt-individuals">L-systems</label>
+					<input type="number" class="form-control" step="1" min="1" id="opt-individuals" ng-model="options.numberOfIndividuals"  />
+				</div>
+				<div class="form-group">
+					<label for="opt-lsystems">L-systems</label>
+					<input type="text" class="form-control"  id="opt-lsystems" ng-model="ev.lsystems"  />
+				</div>
+				<accordion close-others="oneAtATime">
+					<accordion-group heading="Selection">
+						<div class="form-group">
+							<label for="opt-sel-elit">Elitism</label>
+							<input type="number" class="form-control" id="opt-sel-elit" min="0" step="1" ng-model="options.selection.elitism" />
+						</div>
+					</accordion-group>
+					<accordion-group heading="Expressions">
+						<div class="form-group">
+							<label for="opt-exp-var-mut">Variation mutation</label>
+							<input type="number" class="form-control" id="opt-exp-var-mut" min="0" max="1" step="0.1" ng-model="options.opProbabilities.expressionsVariationMutation" />
+						</div>
+						<div class="form-group">
+							<label for="opt-exp-cre-mut">Creation mutation</label>
+							<input type="number" class="form-control" id="opt-exp-cre-mut" min="0" max="1" step="0.1" ng-model="options.opProbabilities.expressionsCreationMutation" />
+						</div>
+						<div class="form-group">
+							<label for="opt-num-mut-var">Number variation (%)</label>
+							<input type="number" class="form-control" id="opt-num-mut-var" min="0" max="100" step="1" ng-model="options.numberMutation.variation" />
+						</div>
+					</accordion-group>
+					<accordion-group heading="Rules crossover">
+						<div class="form-group">
+							<label for="opt-rules-crossover">Crossover</label>
+							<input type="number" class="form-control" id="opt-rules-crossover" min="0" max="1" step="0.1" ng-model="options.opProbabilities.rulesCrossover" />
+						</div>
+						<div class="form-group">
+							<label for="opt-rules-crossover-new-rule">As new rule</label>
+							<input type="number" class="form-control" id="opt-rules-crossover-new-rule" min="0" max="1" step="0.1" ng-model="options.opProbabilities.rulesCrossoverAsNewRule" />
+						</div>
+					</accordion-group>
+					<accordion-group heading="Rules mutation">
+						<div class="form-group">
+							<label for="opt-rules-sym-exp-mut">Symbol arguments</label>
+							<input type="number" class="form-control" id="opt-rules-sym-exp-mut" min="0" max="1" step="0.1" ng-model="options.opProbabilities.rulesSymbolEpressionMutation" />
+						</div>
+						<div class="form-group">
+							<label for="opt-rules-str-mut">String</label>
+							<input type="number" class="form-control" id="opt-rules-str-mut" min="0" max="1" step="0.1" ng-model="options.opProbabilities.rulesStringMutation" />
+						</div>
+						<div class="form-group">
+							<label for="opt-rules-mutation-new-rule">As new rule</label>
+							<input type="number" class="form-control" id="opt-rules-mutation-new-rule" min="0" max="1" step="0.1" ng-model="options.opProbabilities.rulesMutationAsNewRule" />
+						</div>
+					</accordion-group>
+					<accordion-group heading="Colors">
+						<div class="form-group opt-colors">
+							<b> HSV (%) </b>
+							<div class="clearfix">
+								<input type="number" class="form-control" min="0" max="100" step="1" ng-model="options.colorMutation.hVariation" />
+								<input type="number" class="form-control" min="0" max="100" step="1" ng-model="options.colorMutation.sVariation" />
+								<input type="number" class="form-control" min="0" max="100" step="1" ng-model="options.colorMutation.vVariation" />
+							</div>
+						</div>
+						<div class="form-group opt-colors">
+							<b> RGB (%) </b>
+							<div class="clearfix">
+								<input type="number" class="form-control" min="0" max="100" step="1" ng-model="options.colorMutation.rVariation" />
+								<input type="number" class="form-control" min="0" max="100" step="1" ng-model="options.colorMutation.gVariation" />
+								<input type="number" class="form-control" min="0" max="100" step="1" ng-model="options.colorMutation.bVariation" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="opt-color-alfa-mut">Alfa (%)</label>
+							<input type="number" class="form-control" id="opt-color-alfa-mut" min="0" max="100" step="1" ng-model="options.colorMutation.aVariation" />
+						</div>
+					</accordion-group>
+				</accordion>
+			</form>
+		</nav>
+		<section id="evolution-content" ng-if="ev.scripts">
+			<div class="row">
+				<div class="col-md-8">
+					<div class="btn-toolbar form-group" role="toolbar">
+						<div class="btn-group">
+							<button type="button" ng-click="runIndividual()" class="btn btn-primary">
+								Run
+							</button>
+						</div>
+
+						<pagination boundary-links="true" total-items="population.length"
+						items-per-page="1"	 page="ev.scriptIndex" class="pagination" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+
+						<input type="number" id="evaluation" class="form-control" min="0" max="100" step="1" ng-model="population[ev.scriptIndex-1].evaluation" />
+
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="btn-toolbar pull-right" role="toolbar" id="editor-perspective">
+						<div class="btn-group">
+							<a ng-class="{active: mode === 'code'}" class="btn btn-link"  ng-click="changeMode('code')"><span class="glyphicon glyphicon-align-left"></span>Code</a>
+							<a ng-class="{active: mode === 'interpretation'}" class="btn btn-link" ng-click="changeMode('interpretation')"><span class="glyphicon glyphicon-eye-open"></span>Interpretation</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div ng-show="mode === 'code'" class="row">
+				<div class="col-md-12">
+					<div class="form-group">
+						<textarea ng-model="ev.scripts[ev.scriptIndex-1]" class="form-control" rows="20" readonly></textarea>
+					</div>
+				</div>
+			</div>
+			<div  ng-show="mode === 'interpretation'" ng-controller="InterpretationController">
+
+				<div class="alert alert-info" ng-show="interpretation.compiling">
+					Compiling...
+				</div>
+				<div class="alert alert-info" ng-show="interpretation.derivating">
+					Derivating...
+				</div>
+				<div class="row">
+					<div class="col-md-12" ng-repeat="individual in population track by $index">
+						<div id="interpretation-canvas-{{$index}}" ng-show="ev.scriptIndex === $index+1" ng-style="{width: interpretationSettings.width}"></div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-12">
+						<accordion>
+							<accordion-group heading="Canvas Settings">
+								<form role="form">
+									<div class="row">
+										<div class="form-group col-md-3">
+											<label for="canvas-width">Width</label>
+											<input type="number" ng-model="interpretationSettings.width" class="form-control" id="canvas-width" placeholder="Canvas width">
+										</div>
+										<div class="form-group col-md-3">
+											<label for="canvas-height">Height</label>
+											<input type="number" ng-model="interpretationSettings.height" class="form-control" id="canvas-width" placeholder="Canvas height">
+										</div>
+										<div class="form-group col-md-3">
+											<label for="background">Background color</label>
+											<input type="text" ng-model="interpretationSettings.background" class="form-control" id="background" placeholder="Hex-value" />
+										</div>
+										<div class="form-group col-md-3">
+											<label for="symbols-per-frame">Symbols per animation frame</label>
+											<input type="number" ng-model="interpretationSettings.symbolsPerFrame" class="form-control" id="symbols-per-frame" placeholder="Number of symbols" />
+										</div>
+									</div>
+									<div class="row">
+										<div class="form-group col-md-4">
+											<label for="turtle-x">Turtle position - x</label>
+											<input type="number" ng-model="interpretationSettings.x" class="form-control" id="turtle-x" placeholder="x-Coordination" />
+										</div>
+										<div class="form-group col-md-4">
+											<label for="turtle-y">Turtle position - y</label>
+											<input type="number" ng-model="interpretationSettings.y" class="form-control" id="turtle-y" placeholder="y-Coordination" />
+										</div>
+										<div class="form-group col-md-4">
+											<label for="turtle-orientation">Turtle orientation</label>
+											<input type="number" ng-model="interpretationSettings.orientation" class="form-control" id="turtle-orientation" placeholder="Angle" />
+										</div>
+									</div>
+								</form>
+							</accordion-group>
+						</accordion>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+
+</div>
+<div class="modal-footer">
+	<button class="btn btn-warning" ng-click="cancel()">
+		Cancel
+	</button>
+</div>

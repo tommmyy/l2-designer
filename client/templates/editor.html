@@ -36,7 +36,7 @@
 		</li>
 		<li ng-if="selected.type === 'script'" class="divider"></li>
 		<li ng-if="selected.type === 'script'">
-		<a tabindex="-1"  ng-click="mutateScript(selected.id)">Mutate</a>
+		<a tabindex="-1"  ng-click="evolveScript(selected.id)">Evolve</a>
 		</li>
 		<li  ng-if="selected" class="divider"></li>
 		<li role="presentation"  class="dropdown-header">
@@ -57,6 +57,9 @@
 
 <form  class="row" ng-submit="saveScript()" name="scriptForm" ng-if="formdata.script" >
 	<div class="col-md-offset-2 col-md-8">
+		<div class="alert alert-info" ng-show="ui.message">
+			{{ui.message}}
+		</div>
 		<div id="title-wrapper" class="clearfix">
 			<h2><a ng-click="nameScript()">{{formdata.script.name}}</a></h2>
 			<a ng-model="formdata.dir" name="directory" select-dir required><span class="glyphicon glyphicon-folder-open"></span>{{getCurrentDir().name}}</a>
@@ -103,7 +106,7 @@
 			</div>
 		</div>
 
-		<div  ng-show="mode === 'interpretation'" ng-controller="InterpretationController">
+		<div ng-show="mode === 'interpretation'" ng-controller="InterpretationController">
 			<div class="row">
 				<div class="alert alert-info" ng-show="interpretation.compiling">
 					Compiling...

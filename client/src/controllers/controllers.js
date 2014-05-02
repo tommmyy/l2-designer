@@ -7,7 +7,7 @@ var angular = require("angular"),
 	ProjectsController = require("./projectsController").ProjectsController;
 
 
-app.controller('AppController', ['$scope', AppController]);
+app.controller('AppController', ['$scope', '$timeout', AppController]);
 app.controller('ProjectsController', ['$scope', '$routeParams', 'UserBubble', 'Projects', ProjectsController]);	
 app.controller('FilesController', ['$scope', '$location', '$routeParams', FilesController]);
 app.controller('InterpretationController', ['$scope', 'UserBubble', 'Env', InterpretationController]);

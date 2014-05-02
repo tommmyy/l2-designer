@@ -1,6 +1,8 @@
 @baseGray: #ddd;
 @projectsPadding: 10px;
 
+@evolution-modal-nav-width: 250px;
+
 .cursorPointer() {cursor: pointer; cursor: hand;}
 .iconText() {
   .glyphicon {margin-right: 5px;}
@@ -58,6 +60,49 @@ a {.cursorPointer;}
   border: 1px solid transparent;margin: 0 auto;
   &:hover { border-color: @baseGray;}
 }
+
+@media (min-width: 1024px) {
+  .evolution-modal {
+    .modal-dialog { width: 1024px;}
+  }
+}
+
+@media (min-width: 1700px) {
+  .evolution-modal {
+    .modal-dialog { width: 1700px;}
+  }
+}
+
+
+#evolution-content {
+  margin-left: @evolution-modal-nav-width + 20px;
+  min-height: 400px;
+  
+  .pagination {margin: 0 10px; float: left;}
+  #evaluation {float: left; width: 60px;}
+}
+
+#evolution-nav {
+      width: @evolution-modal-nav-width;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    padding: 10px 0;
+    overflow: hidden;
+    &:hover {
+      overflow: auto;
+    }
+    .opt-colors {
+      input {
+        float: left;
+        width: 30%;
+        margin-right: 5px;
+      }
+    }
+}
+
+
+
   
 
 

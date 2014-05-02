@@ -25,6 +25,16 @@ exports.InterpretationController = function($scope, UserBubble, Env) {
 	$scope.$on("run_script", function(e, code) {
 		$scope.run(code);
 	});
+	
+	$scope.$on("run_script_ast", function(e, ast) {
+		if ($scope.interpretation.compiling || $scope.interpretation.derivating) {
+			return;
+		}
+		$scope.changeMode('interpretation');
+		$scope.interpretation.compiling = true;
+		
+		compiled(new l2js.compiler.Compiler().ASTToJS(ast));
+	});
 
 	$scope.run = function(code) {
 		if ($scope.interpretation.compiling || $scope.interpretation.derivating) {
@@ -48,7 +58,7 @@ exports.InterpretationController = function($scope, UserBubble, Env) {
 			}
 
 			l2js.interpretAll(resource.result, {
-				container : "interpretation-canvas",
+				container : $scope.canvas || "interpretation-canvas",
 				width : $scope.interpretationSettings.width,
 				height : $scope.interpretationSettings.height,
 				symbolsPerFrame : $scope.interpretationSettings.symbolsPerFrame,
