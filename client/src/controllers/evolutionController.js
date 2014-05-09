@@ -11,7 +11,7 @@ exports.EvolutionController = function($scope, $modalInstance, parentScope, scri
 	
 	$scope.options = {
 		numberOfIndividuals : 10,
-		lsystems : ["Stem"], // L-systems names to evolve within individual, default is main call
+		lsystems : [], // L-systems names to evolve within individual, default is main call
 		opProbabilities : {
 			expressionsVariationMutation : 0.5,
 			expressionsCreationMutation : 0.5,
@@ -23,24 +23,25 @@ exports.EvolutionController = function($scope, $modalInstance, parentScope, scri
 			//			,stringsPermutation : 0.1
 		},
 		colorMutation : {
-			//			h : [60, 180, 30, 0], // degrees
+			h : [60, 180, 30, 0], // degrees
 			hVariation : 10, // percents
-			sVariation : 50,
-			vVariation : 50,
-			rVariation : 50,
-			gVariation : 50,
-			bVariation : 50,
-			aVariation : 50
+			sVariation : 5,
+			vVariation : 5,
+			rVariation : 5,
+			gVariation : 5,
+			bVariation : 5,
+			aVariation : 5
 		},
 		numberMutation : {
 			variation : 10 // in percent
 		},
 		selection: {
-			elitism: 0
+			elitism: 3
 		},
 		newRuleProbabilityFactor : 2,
 		evolveLScriptExpressions : true,
 		maxLevelForRandomExpressions : 3,
+		maxExpressionLevel : 4,
 		stringMutation : {
 			blackList : ["PU", "PS"]
 		}
@@ -64,7 +65,7 @@ exports.EvolutionController = function($scope, $modalInstance, parentScope, scri
 		$scope.ev.scriptIndex = 1;
 
 		var compiler = new l2js.compiler.Compiler();
-		for (var i = 1; i < $scope.population.length; i++) {
+		for (var i = 0; i < $scope.population.length; i++) {
 			$scope.ev.scripts.push(compiler.ASTToL2($scope.population[i].ast));
 		}
 	};
@@ -83,9 +84,20 @@ exports.EvolutionController = function($scope, $modalInstance, parentScope, scri
 	$scope.$watch("ev.lsystems", function(val) {
 		$scope.options.lsystems = $.map(val.split(","), $.trim);
 	});
+	
+	$scope.$watch("ev.hDegrees", function(val) {
+		if(val) {
+			$scope.options.colorMutation.h = $.map(val.split(","), _trimInt);
+		}
+		
+		
+	});
+	function _trimInt(val) {
+		return parseInt($.trim(val));	
+	}
 
 	function _init() {
-
+		$scope.ev.hDegrees = $scope.options.colorMutation.h.join(",");
 		var compiler = new l2js.compiler.Compiler(), asts = [];
 		var ast = compiler.toAST(script.code);
 		asts.push({

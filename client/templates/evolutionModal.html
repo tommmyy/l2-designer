@@ -13,7 +13,7 @@
 					</button>
 				</div>
 				<div class="form-group">
-					<label for="opt-individuals">L-systems</label>
+					<label for="opt-individuals">Size of population</label>
 					<input type="number" class="form-control" step="1" min="1" id="opt-individuals" ng-model="options.numberOfIndividuals"  />
 				</div>
 				<div class="form-group">
@@ -66,17 +66,19 @@
 						</div>
 					</accordion-group>
 					<accordion-group heading="Colors">
-						<div class="form-group opt-colors">
+						<div class="form-group">
 							<b> HSV (%) </b>
-							<div class="clearfix">
+							<div class="clearfix  opt-colors">
 								<input type="number" class="form-control" min="0" max="100" step="1" ng-model="options.colorMutation.hVariation" />
 								<input type="number" class="form-control" min="0" max="100" step="1" ng-model="options.colorMutation.sVariation" />
 								<input type="number" class="form-control" min="0" max="100" step="1" ng-model="options.colorMutation.vVariation" />
 							</div>
+							<label for="opt-h-angles">H angles</label>
+							<input type="text" class="form-control" id="opt-h-angles"  ng-model="ev.hDegrees" />
 						</div>
-						<div class="form-group opt-colors">
+						<div class="form-group ">
 							<b> RGB (%) </b>
-							<div class="clearfix">
+							<div class="clearfix  opt-colors">
 								<input type="number" class="form-control" min="0" max="100" step="1" ng-model="options.colorMutation.rVariation" />
 								<input type="number" class="form-control" min="0" max="100" step="1" ng-model="options.colorMutation.gVariation" />
 								<input type="number" class="form-control" min="0" max="100" step="1" ng-model="options.colorMutation.bVariation" />

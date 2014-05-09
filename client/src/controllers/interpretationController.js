@@ -53,8 +53,8 @@ exports.InterpretationController = function($scope, UserBubble, Env) {
 			code : js
 		}).$promise.then(function(resource) {
 			$scope.interpretation.derivating = false;
-			if (resource.result.error) {
-				errorHandler(resource.result.error);
+			if (resource.error) {
+				errorHandler(resource.error);
 			}
 
 			l2js.interpretAll(resource.result, {
