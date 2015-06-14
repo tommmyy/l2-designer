@@ -1,50 +1,51 @@
 {
-	"name": "l2jsDesigner",
-	"version": "0.1.0",
-	"private": true,
-	"dependencies": {
-		"jquery": "~1.10.2",
-		"angular": "1.2.15",
-		"angular-route": "1.2.15",
-		"angular-resource": "1.2.15",
-		"bootstrap": "~3.1.1",
-		"angular-bootstrap-jbruni": "0.10.0",
-		"bootstrap-contextmenu": "0.2.0",
-		"l2js": "https://github.com/tommmyy/L2JS.git",
-		"kineticjs": "~5.0.1"
-	},
-	"devDependencies": {
-		"jasmine": "~2.0.0"
-	},
-	"exportsOverride": {
-		"jquery": {
-			"js": "jquery.js"
-		},
-		"angular": {
-			"js": "angular.js"
-		},
-		"angular-route": {
-			"js": "angular-route.js"
-		},
-		"angular-resource": {
-			"js": "angular-resource.js"
-		},
-		"angular-bootstrap-jbruni": {
-			"js": "+(ui-bootstrap|ui-bootstrap-tpls).js"
-		},
-		"bootstrap": {
-			"css": "dist/css/bootstrap.css",
-			"fonts": "dist/fonts/*"
-		},
-		"bootstrap-contextmenu": {
-			"js": "bootstrap-contextmenu.js"
-		},
-		"kineticjs": {
-			"js": "kinetic.js"
-		},
-		"l2js": {
-			"js": "dist/l2js.js"
-		},
-		"jasmine": {}
-	}
+  "name": "l2jsDesigner",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "jquery": "~1.10.2",
+    "angular": "1.2.15",
+    "angular-route": "1.2.15",
+    "angular-resource": "1.2.15",
+    "bootstrap": "~3.1.1",
+    "angular-bootstrap-jbruni": "0.10.0",
+    "bootstrap-contextmenu": "0.2.0",
+    "l2js": "https://github.com/tommmyy/L2JS.git",
+    "kineticjs": "~5.0.1"
+  },
+  "devDependencies": {
+    "jasmine": "~2.0.0",
+    "bootstrap-sass": "~3.3.4"
+  },
+  "exportsOverride": {
+    "jquery": {
+      "js": "jquery.js"
+    },
+    "angular": {
+      "js": "angular.js"
+    },
+    "angular-route": {
+      "js": "angular-route.js"
+    },
+    "angular-resource": {
+      "js": "angular-resource.js"
+    },
+    "angular-bootstrap-jbruni": {
+      "js": "+(ui-bootstrap|ui-bootstrap-tpls).js"
+    },
+    "bootstrap": {
+      "css": "dist/css/bootstrap.css",
+      "fonts": "dist/fonts/*"
+    },
+    "bootstrap-contextmenu": {
+      "js": "bootstrap-contextmenu.js"
+    },
+    "kineticjs": {
+      "js": "kinetic.js"
+    },
+    "l2js": {
+      "js": "dist/l2js.js"
+    },
+    "jasmine": {}
+  }
 }

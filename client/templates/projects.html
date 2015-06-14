@@ -1,4 +1,4 @@
-<section id="projects" class="row">
+<section id="projects" class="projects row">
 
 	<div class="col-md-offset-4 col-md-4">
 		<h1>Projects</h1>
@@ -6,7 +6,7 @@
 		<form id="projects-form" ng-submit="addProject()">
 			<input id="new-project" class="form-control" placeholder="Name of new project" ng-model="newProject" autofocus />
 		</form>
-		<ul id="projects-list">
+		<ul class="projects-list">
 			<li ng-repeat="project in projects">
 				<a href="/projects/{{project._id}}">{{project.name}}</a>
 				<nav class="actions">

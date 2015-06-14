@@ -5,9 +5,10 @@ module.exports = {
 		try {
 			var code = req.body.code;
 			var t1 = new Date().getTime();
-			l2js.options.maxDerivedSymbols = 50000;	
+			l2js.options.maxDerivedSymbols = 500000;	
 			var result = l2js.derive(code);
-			res.json({result: result});
+			console.log("done");
+			res.send({result: JSON.stringify(result)});
 		} catch (err) {
 			console.log("error:", err.message);
 			res.json({

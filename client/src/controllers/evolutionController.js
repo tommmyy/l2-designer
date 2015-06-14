@@ -23,7 +23,8 @@ exports.EvolutionController = function($scope, $modalInstance, parentScope, scri
 			//			,stringsPermutation : 0.1
 		},
 		colorMutation : {
-			h : [60, 180, 30, 0], // degrees
+		//	h : [60, 180, 30, 0], // degrees
+				h : [], // degrees
 			hVariation : 10, // percents
 			sVariation : 5,
 			vVariation : 5,
