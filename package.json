@@ -1,6 +1,6 @@
 {
-  "name": "l2jsDesigner",
-  "title": "L2JS Designer",
+  "name": "l2-designer",
+  "title": "L2 Designer",
   "version": "0.1.0",
   "engines": {
     "node": "0.10.x"
@@ -48,7 +48,7 @@
     "handlebars-runtime": "~1.0.12",
     "express3-handlebars": "~0.5.0",
     "MD5": "~1.2.0",
-    "l2js": "git+https://github.com/tommmyy/L2JS.git#master"
+    "l2js": "git+https://github.com/tommmyy/l2js.git#master"
   },
   "author": {
     "name": "Tomáš Konrády",

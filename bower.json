@@ -1,5 +1,5 @@
 {
-  "name": "l2jsDesigner",
+  "name": "l2js-designer",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -10,7 +10,7 @@
     "bootstrap": "~3.1.1",
     "angular-bootstrap-jbruni": "0.10.0",
     "bootstrap-contextmenu": "0.2.0",
-    "l2js": "https://github.com/tommmyy/L2JS.git",
+    "l2js": "https://github.com/tommmyy/l2js.git",
     "kineticjs": "~5.0.1"
   },
   "devDependencies": {
