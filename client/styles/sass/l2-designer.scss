@@ -1,0 +1,163 @@
+@import "compass";
+@import "reset";
+@import "abn-tree";
+
+$icon-font-path: "../fonts/bootstrap/";
+
+@import "../../../bower_components/bootstrap-sass/assets/stylesheets/bootstrap";
+
+$baseGray: #ddd;
+$projectsPadding: 11px;
+$evolution-modal-nav-width: 250px;
+
+%cursorPointer {
+  cursor: pointer;
+  cursor: hand;
+}
+
+%iconText {
+  .glyphicon {
+    margin-right: 5px;
+  }
+}
+
+.projects, .directories {
+  &-list {
+    .actions {
+      position: absolute;
+      right: $projectsPadding;
+      top: $projectsPadding;
+      display: none;
+    }
+
+    a, .readonly {
+      display: block;
+      padding: $projectsPadding 0 $projectsPadding $projectsPadding;
+    }
+
+    li {
+      position: relative;
+    }
+
+    li:hover {
+      background-color: $baseGray;
+
+      .actions {
+        display: block;
+      }
+    }
+  }
+
+  &-form {
+    padding: $projectsPadding 0;
+  }
+}
+
+.custom-control {
+  line-height: 40px;
+
+  a:hover {
+    text-decoration: none;
+    font-weight: bold;
+  }
+}
+
+a {
+  @extend %cursorPointer;
+}
+
+#editor-nav-list {
+  & > li:first-child {
+    margin-left: 80px;
+  }
+}
+
+.navbar-placeholder {
+  height: 55px;
+}
+
+#files {
+  width: 200px;
+}
+
+#title-wrapper {
+  h2, a {
+    display: inline;
+    margin: 0;
+    padding: 0;
+    margin-right: 5px;
+  }
+
+  h2 {
+    a {
+      color: black;
+    }
+  }
+  @extend %iconText;
+  margin-bottom: 10px;
+}
+
+#editor-perspective {
+  @extend %iconText;
+}
+
+#interpretation-canvas {
+  border: 1px solid transparent;
+  margin: 0 auto;
+
+  &:hover {
+    border-color: $baseGray;
+  }
+}
+
+.evolution-modal {
+  @media (min-width: 1024px) {
+    .modal-dialog {
+      width: 1024px;
+    }
+  }
+}
+
+.evolution-modal {
+  @media (min-width: 1700px) {
+    .modal-dialog {
+      width: 1700px;
+    }
+  }
+}
+
+#evolution-content {
+  margin-left: $evolution-modal-nav-width + 20px;
+  min-height: 400px;
+
+  .pagination {
+    margin: 0 10px;
+    float: left;
+  }
+
+  #evaluation {
+    float: left;
+    width: 60px;
+  }
+}
+
+#evolution-nav {
+  width: $evolution-modal-nav-width;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  padding: 10px 0;
+  overflow: hidden;
+
+  &:hover {
+    overflow: auto;
+  }
+
+  .opt-colors {
+    input {
+      float: left;
+      width: 30%;
+      margin-right: 5px;
+    }
+  }
+}
