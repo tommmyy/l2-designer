@@ -2,9 +2,11 @@ var l2js = require('l2js');
 exports.InterpretationController = function($scope, UserBubble, Env) {
     // var width = 1440, height = 810;
 
+    var width = 880,
+        height = 880;
     // a4 72 PPI
-    var width = 595,
-        height = 842;
+    //var width = 595,
+    //    height = 842;
 
     // a4 200 PPI
     //var width = 1654 , height = 2339;
@@ -42,9 +44,10 @@ exports.InterpretationController = function($scope, UserBubble, Env) {
             return;
         }
         $scope.changeMode('interpretation');
-        $scope.interpretation.compiling = true;
+        //$scope.interpretation.compiling = true;
 
         compiled(new l2js.compiler.Compiler().ASTToJS(ast));
+        $scope.interpretation.compiling = false;
     });
 
     $scope.run = function(code) {
@@ -57,7 +60,7 @@ exports.InterpretationController = function($scope, UserBubble, Env) {
 
     };
 
-    function compiled(js) {
+    function compiledAsync(js) {
         $scope.interpretation.compiling = false;
         $scope.interpretation.derivating = true;
         Env.derive({}, {
@@ -67,8 +70,9 @@ exports.InterpretationController = function($scope, UserBubble, Env) {
             if (resource.error) {
                 errorHandler(resource.error);
             }
-
-            l2js.interpretAll(JSON.parse(resource.result), {
+            var result = JSON.parse(resource.result);
+            console.log(toString(result.interpretation));
+            l2js.interpretAll(result, {
                 container: $scope.canvas || 'interpretation-canvas',
                 width: $scope.interpretationSettings.width,
                 height: $scope.interpretationSettings.height,
@@ -82,8 +86,45 @@ exports.InterpretationController = function($scope, UserBubble, Env) {
         }, errorHandler);
     }
 
+    function compiled(js) {
+        $scope.$apply(function() {
+            $scope.interpretation.compiling = false;
+        })
+
+        var result = l2js.derive(js);
+
+        console.log(toString(result.interpretation));
+        l2js.interpretAll(result, {
+            container: $scope.canvas || 'interpretation-canvas',
+            width: $scope.interpretationSettings.width,
+            height: $scope.interpretationSettings.height,
+            symbolsPerFrame: $scope.interpretationSettings.symbolsPerFrame,
+            bgColor: $scope.interpretationSettings.background,
+            turtle: {
+                initPosition: [$scope.interpretationSettings.x, $scope.interpretationSettings.y],
+                initOrientation: $scope.interpretationSettings.orientation
+            }
+        });
+
+    }
+
     function errorHandler(err) {
         $scope.$emit('user_bubble', new UserBubble(err));
+    }
+
+    function toString(symbols) {
+
+        var stringSymbols = symbols.map(function(s) {
+
+            if (s.type === 'stack') {
+                return '[ ' + toString(s.string) + ' ]';
+            } else {
+                return s.symbol;
+            }
+
+        });
+
+        return stringSymbols.join(' ');
     }
 
 };

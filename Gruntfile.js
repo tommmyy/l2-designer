@@ -8,9 +8,17 @@ module.exports = function(grunt) {
 
         bower: {
             install: {
+                dest: 'client/requires',
                 options: {
-                    targetDir: 'client/requires',
-                    layout: 'byComponent'
+                    expand: true,
+                    packageSpecific: {
+                        'angular-bootstrap-jbruni': {
+                            files: [
+                                'ui-bootstrap.js',
+                                'ui-bootstrap-tpls.js'
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -25,66 +33,68 @@ module.exports = function(grunt) {
 
         browserify: {
             vendor: {
-                src: ['client/requires/**/*.js'],
+                src: ['!client/requires/js/**/*.js', 'client/requires/**/*.js'],
                 dest: 'build/vendor.js',
                 options: {
                     shim: {
                         jquery: {
-                            path: 'client/requires/jquery/js/jquery.js',
+                            path: 'client/requires/jquery/jquery.js',
                             exports: '$'
                         },
                         angular: {
-                            path: 'client/requires/angular/js/angular.js',
+                            path: 'client/requires/angular/angular.js',
                             exports: 'angular',
                             depends: {
                                 jquery: '$'
                             }
                         },
                         'angular-route': {
-                            path: 'client/requires/angular-route/js/angular-route.js',
+                            path: 'client/requires/angular-route/angular-route.js',
                             exports: null,
                             depends: {
                                 angular: 'angular'
                             }
                         },
                         'angular-resource': {
-                            path: 'client/requires/angular-resource/js/angular-resource.js',
+                            path: 'client/requires/angular-resource/angular-resource.js',
                             exports: null,
                             depends: {
                                 angular: 'angular'
                             }
                         },
                         'angular-bootstrap': {
-                            path: 'client/requires/angular-bootstrap-jbruni/js/ui-bootstrap.js',
+                            path: 'client/requires/angular-bootstrap-jbruni/ui-bootstrap.js',
                             exports: null,
                             depends: {
                                 angular: 'angular'
                             }
                         },
                         'angular-bootstrap-tpls': {
-                            path: 'client/requires/angular-bootstrap-jbruni/js/ui-bootstrap-tpls.js',
+                            path: 'client/requires/angular-bootstrap-jbruni/ui-bootstrap-tpls.js',
                             exports: null,
                             depends: {
                                 'angular-bootstrap': null
                             }
                         },
                         'bootstrap-contextmenu': {
-                            path: 'client/requires/bootstrap-contextmenu/js/bootstrap-contextmenu.js',
+                            path: 'client/requires/bootstrap-contextmenu/bootstrap-contextmenu.js',
                             exports: null,
                             depends: {
                                 'angular-bootstrap': null
                             }
                         },
-                        'kineticjs': {
-                            path: 'client/requires/kineticjs/js/kinetic.js',
-                            exports: 'Kinetic'
-                        },
                         'l2js': {
-                            path: 'client/requires/l2js/js/l2js.js',
+                            //path: '../L2JS/dist/l2js.js',
+                            path: 'node_modules/l2js/dist/l2js.js',
                             exports: 'l2js',
                             depends: {
-                                'kineticjs': 'Kinetic'
+                                'pixi.js': null
                             }
+                        },
+                        'pixi.js': {
+                            //path: '../L2JS/dist/l2js.js',
+                            path: 'node_modules/pixi.js/bin/pixi.min.js',
+                            exports: 'PIXI',
                         }
                     }
                 }
@@ -95,18 +105,10 @@ module.exports = function(grunt) {
                 },
                 options: {
                     transform: ['hbsfy'],
-                    external: ['jquery', 'angular', 'angular-route', 'angular-resource', 'angular-bootstrap', 'angular-bootstrap-tpls', 'bootstrap-contextmenu', 'l2js', 'kineticjs']
-                }
-            },
-            test: {
-                files: {
-                    'build/tests.js': ['client/spec/**/*.test.js']
-                },
-                options: {
-                    transform: ['hbsfy'],
-                    external: ['jquery', 'angular', 'angular-route', 'angular-resource', 'angular-bootstrap', 'angular-bootstrap-tpls', 'bootstrap-contextmenu', 'l2js', 'kineticjs']
+                    external: ['jquery', 'angular', 'angular-route', 'angular-resource', 'angular-bootstrap', 'angular-bootstrap-tpls', 'bootstrap-contextmenu', 'pixi.js', 'l2js']
                 }
             }
+
         },
         compass: {
             init: {
@@ -262,11 +264,13 @@ module.exports = function(grunt) {
         }
     });
 
+    grunt.registerTask('vendor', ['browserify:vendor', 'concat', 'copy:dev'])
+
     grunt.registerTask('init', ['clean', 'bower', 'browserify:vendor', 'compass:init']);
     grunt.registerTask('dev', ['clean:dev', 'browserify:app', 'concat', 'copy:dev']);
     grunt.registerTask('prod', ['clean:prod', 'browserify:vendor', 'browserify:app', 'compass:prod', 'concat', 'uglify', 'copy:prod']);
     grunt.registerTask('server', ['dev', 'concurrent:dev']);
 
-    grunt.registerTask('test', ['test:server', 'test:client']);
+    //grunt.registerTask('test', ['test:server', 'test:client']);
     grunt.registerTask('default', ['server']);
 };

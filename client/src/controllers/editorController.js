@@ -1,6 +1,7 @@
 var DirController = require('./dirController').DirController,
     EvolutionController = require('./evolutionController').EvolutionController,
     NameScriptController = require('./nameScriptController').NameScriptController;
+
 exports.EditorController = function($scope, $routeParams, $location, $modal, Projects, Scripts, UserBubble) {
     var DEFAULT_MODE = 'code';
     $scope.formdata = {};
@@ -188,6 +189,11 @@ exports.EditorController = function($scope, $routeParams, $location, $modal, Pro
             $scope.$apply(function() {
                 $scope.formdata.script.code = formatted;
             });
+        }, function(e) {
+            errorHandler(e);
+
+        }).catch(function(e) {
+            console.log(e);
         });
     };
 

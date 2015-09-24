@@ -1,12 +1,13 @@
+/* global document, $, l2js */
 exports.EvolutionController = function($scope, $modalInstance, parentScope, script, Projects) {
 
     $scope.project = parentScope.project;
     var parent = parentScope;
     var evolver;
-    $scope.mode = "code";
+    $scope.mode = 'code';
     $scope.ev = {
         scripts: [],
-        lsystems: ""
+        lsystems: ''
     };
 
     $scope.options = {
@@ -16,14 +17,14 @@ exports.EvolutionController = function($scope, $modalInstance, parentScope, scri
             expressionsVariationMutation: 0.5,
             expressionsCreationMutation: 0.5,
             rulesCrossover: 0.8,
-            rulesCrossoverAsNewRule: 1,
+            rulesCrossoverAsNewRule: 0.3,
             rulesSymbolEpressionMutation: 0.5,
             rulesStringMutation: 1,
-            rulesMutationAsNewRule: 1
-                //			,stringsPermutation : 0.1
+            rulesMutationAsNewRule: 0.3
+                //          ,stringsPermutation : 0.1
         },
         colorMutation: {
-            //	h : [60, 180, 30, 0], // degrees
+            //  h : [60, 180, 30, 0], // degrees
             h: [], // degrees
             hVariation: 10, // percents
             sVariation: 5,
@@ -44,15 +45,15 @@ exports.EvolutionController = function($scope, $modalInstance, parentScope, scri
         maxLevelForRandomExpressions: 3,
         maxExpressionLevel: 4,
         stringMutation: {
-            blackList: ["PU", "PS"]
+            blackList: ['PU', 'PS']
         }
     };
 
     $scope.runIndividual = function() {
         var i = $scope.ev.scriptIndex - 1;
         if ($scope.population[i]) {
-            $scope.canvas = "interpretation-canvas-" + i;
-            $scope.$broadcast("run_script_ast", $scope.population[i].ast);
+            $scope.canvas = 'interpretation-canvas-' + i;
+            $scope.$broadcast('run_script_ast', $scope.population[i].ast);
         }
     };
 
@@ -82,13 +83,13 @@ exports.EvolutionController = function($scope, $modalInstance, parentScope, scri
         $modalInstance.close();
     };
 
-    $scope.$watch("ev.lsystems", function(val) {
-        $scope.options.lsystems = $.map(val.split(","), $.trim);
+    $scope.$watch('ev.lsystems', function(val) {
+        $scope.options.lsystems = $.map(val.split(','), $.trim);
     });
 
-    $scope.$watch("ev.hDegrees", function(val) {
+    $scope.$watch('ev.hDegrees', function(val) {
         if (val) {
-            $scope.options.colorMutation.h = $.map(val.split(","), _trimInt);
+            $scope.options.colorMutation.h = $.map(val.split(','), _trimInt);
         }
 
 
@@ -98,8 +99,60 @@ exports.EvolutionController = function($scope, $modalInstance, parentScope, scri
         return parseInt($.trim(val));
     }
 
+    /*
+        left = 37
+        up = 38
+        right = 39
+        down = 40
+
+        a -left = 65
+        d -right = 68
+        w -up = 87
+        s -down = 83
+    */
+    function _handlePress(e) {
+        console.log(e.keyCode);
+        if (e.keyCode === 65) {
+            beforeIndex();
+        } else if (e.keyCode === 68) {
+            nextIndex();
+        } else if (e.keyCode === 87) {
+            increaseEvalution();
+        } else if (e.keyCode === 83) {
+            decreaseEvalution();
+        }
+        $scope.$digest();
+    }
+
+    function beforeIndex() {
+        $scope.ev.scriptIndex--;
+        if ($scope.ev.scriptIndex < 1) {
+            $scope.ev.scriptIndex = 1;
+        }
+    }
+
+    function increaseEvalution() {
+        $scope.population[$scope.ev.scriptIndex - 1].evaluation++;
+    }
+
+    function decreaseEvalution() {
+        $scope.population[$scope.ev.scriptIndex - 1].evaluation--;
+
+        if ($scope.population[$scope.ev.scriptIndex - 1].evaluation < 0) {
+
+            $scope.population[$scope.ev.scriptIndex - 1].evaluation = 0;
+        }
+    }
+
+    function nextIndex() {
+        $scope.ev.scriptIndex++;
+        if ($scope.ev.scriptIndex > $scope.population.length) {
+            $scope.ev.scriptIndex = $scope.population.length;
+        }
+    }
+
     function _init() {
-        $scope.ev.hDegrees = $scope.options.colorMutation.h.join(",");
+        $scope.ev.hDegrees = $scope.options.colorMutation.h.join(',');
         var compiler = new l2js.compiler.Compiler(),
             asts = [];
         var ast = compiler.toAST(script.code);
@@ -112,6 +165,12 @@ exports.EvolutionController = function($scope, $modalInstance, parentScope, scri
         $scope.population = evolver.getPopulation();
         $scope.ev.scriptIndex = 1;
         $scope.ev.scripts = [script.code];
+
+        var b = angular.element(document.body);
+        b.on('keydown', _handlePress);
+        $scope.$on('$destroy', function() {
+            b.off('keydown', _handlePress);
+        });
     }
 
     _init();
