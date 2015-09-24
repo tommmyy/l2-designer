@@ -9,6 +9,8 @@ module.exports = function(grunt) {
         bower: {
             install: {
                 dest: 'client/requires',
+                scss_dest: 'client/styles/sass/',
+                css_dest: 'client/styles/css/',
                 options: {
                     expand: true,
                     packageSpecific: {
@@ -149,7 +151,7 @@ module.exports = function(grunt) {
                     expand: true,
                     cwd: 'build/',
                     flatten: true,
-                    src: '**/*.css',
+                    src: 'client/styles/css/**/*.css',
                     dest: 'public/css/'
                 }, {
                     src: 'client/img/*',
@@ -223,8 +225,8 @@ module.exports = function(grunt) {
             dev: {
                 options: {
                     file: 'server.js',
-                    nodeArgs: ['--debug', '--max-old-space-size=8192'],
-                    watchedFolders: ['controllers', 'app'],
+                    nodeArgs: ['--debug'],
+                    watchedFolders: ['controllers', 'app']
                 }
             }
         },

@@ -6,7 +6,7 @@ var express = require('express'),
     mongoose = require('mongoose'),
     seeder = require('./app/seeder'),
     app = express();
-
+console.log("????")
 app.set('port', process.env.PORT || 3300);
 app.set('views', __dirname + '/views');
 app.engine('handlebars', exphbs({
